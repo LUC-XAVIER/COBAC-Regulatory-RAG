@@ -1,5 +1,11 @@
+import sys
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
 def main():
-    print("Hello from cobac-regulatory-rag!")
+    return "Hello from cobac-regulatory-rag!"
 
 
 if __name__ == "__main__":
