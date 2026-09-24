@@ -16,7 +16,7 @@ class Retriever:
         self.embedding_model = embedding_model
 
     def retrieve(self, query: str, k: int = 5) -> list[Chunk]:
-        query_vector = self.embedding_model.embed([query])
+        query_vector = self.embedding_model.embed_query(query)
         scores, ids = self.index.search(query_vector, k)
         return [
             RetrievedChunk(chunk=self.chunk_store.get(int(i)), score=score)

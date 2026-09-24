@@ -1,5 +1,4 @@
 import shutil
-from pathlib import Path
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.core.config import settings
 from app.dependencies import get_embedding_model, get_vector_index, get_chunk_store
@@ -51,7 +50,7 @@ async def ingest(files: list[UploadFile] = File(...)):
     chunk_store = get_chunk_store()
 
     texts = [c.text for c in all_chunks]
-    vectors = embedding_model.embed(texts)
+    vectors = embedding_model.embed_passages(texts)
 
     start_id = len(chunk_store._store)
     ids = list(range(start_id, start_id + len(all_chunks)))
