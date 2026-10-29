@@ -16,7 +16,9 @@ class Settings(BaseSettings):
     EMBEDDING_DIM: int = 384
 
     LLM_MODEL: str = "claude-sonnet-4-6"
-    ANTHROPIC_API_KEY: str = ""
+
+    NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
+    DEFAULT_MODEL = "moonshotai/kimi-k2.5"
 
     TOP_K: int = 5
 

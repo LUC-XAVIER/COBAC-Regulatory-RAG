@@ -1,14 +1,28 @@
-import anthropic
+import os
+from openai import OpenAI
+from core.config import Settings
+
 
 class Generator:
-    def __init__(self, model: str = "claude-sonnet-4-6"):
-        self.client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env
-        self.model = model
+    def __init__(self, model: str | None = None):
+        api_key = os.environ.get("NVIDIA_API_KEY", Settings.NVIDIA_API_KEY)
+        if not api_key:
+            raise RuntimeError(
+                "NVIDIA_API_KEY is not set. Create a key at build.nvidia.com "
+                "and export it as an environment variable."
+            )
+        self.client = OpenAI(
+            base_url=os.environ.get("NVIDIA_BASE_URL", Settings.NVIDIA_BASE_URL),
+            api_key=api_key,
+            timeout=120,
+        )
+        self.model = model or os.environ.get("NVIDIA_MODEL", Settings.DEFAULT_MODEL)
 
     def generate(self, prompt: str) -> str:
-        response = self.client.messages.create(
+        response = self.client.chat.completions.create(
             model=self.model,
-            max_tokens=1024,
             messages=[{"role": "user", "content": prompt}],
+            max_tokens=1024,
+            temperature=0.2,  # low = more faithful to the retrieved context
         )
-        return response.content[0].text
+        return response.choices[0].message.content or ""
