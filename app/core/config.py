@@ -1,11 +1,12 @@
 from pathlib import Path
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 class Settings(BaseSettings):
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    #model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     DATA_DIR: Path = BASE_DIR / "data"
     INDEX_PATH: Path = BASE_DIR / "data" / "index" / "faiss.index"
@@ -17,6 +18,7 @@ class Settings(BaseSettings):
 
     LLM_MODEL: str = "claude-sonnet-4-6"
 
+    NVIDIA_API_KEY: str
     NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
     DEFAULT_MODEL = "moonshotai/kimi-k2.5"
 
