@@ -35,7 +35,7 @@ def get_retriever() -> Retriever:
 
 @lru_cache
 def get_generator() -> Generator:
-    return Generator(model=settings.LLM_MODEL)
+    return Generator(model=settings.NVIDIA_MODEL)
 
 
 def get_rag_service() -> RAGService:

@@ -1,6 +1,6 @@
 import os
 from openai import OpenAI
-from core.config import Settings
+from app.core.config import Settings
 
 
 class Generator:
@@ -16,7 +16,7 @@ class Generator:
             api_key=api_key,
             timeout=120,
         )
-        self.model = model or os.environ.get("NVIDIA_MODEL", Settings.DEFAULT_MODEL)
+        self.model = model or os.environ.get("NVIDIA_MODEL", Settings.NVIDIA_MODEL)
 
     def generate(self, prompt: str) -> str:
         response = self.client.chat.completions.create(

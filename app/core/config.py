@@ -16,11 +16,9 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = "intfloat/multilingual-e5-small"
     EMBEDDING_DIM: int = 384
 
-    LLM_MODEL: str = "claude-sonnet-4-6"
-
     NVIDIA_API_KEY: str
-    NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
-    DEFAULT_MODEL = "moonshotai/kimi-k2.5"
+    NVIDIA_BASE_URL: str = "https://integrate.api.nvidia.com/v1"
+    NVIDIA_MODEL: str = "moonshotai/kimi-k2.5"
 
     TOP_K: int = 5
 
