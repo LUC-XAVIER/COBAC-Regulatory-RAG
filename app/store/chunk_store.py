@@ -1,4 +1,3 @@
-# store/chunk_store.py
 import json
 from pathlib import Path
 from app.services.chunking import Chunk
