@@ -12,12 +12,12 @@ class Settings(BaseSettings):
     CHUNKS_PATH: Path = BASE_DIR / "data" / "index" / "chunks.json"
     RAW_DIR: Path = BASE_DIR / "data" / "raw"
 
-    EMBEDDING_MODEL: str = "intfloat/multilingual-e5-small"
-    EMBEDDING_DIM: int = 384
+    EMBEDDING_DIM: int
+    EMBEDDING_MODEL: str
 
     NVIDIA_API_KEY: str
-    NVIDIA_BASE_URL: str = "https://integrate.api.nvidia.com/v1"
-    NVIDIA_MODEL: str = "moonshotai/kimi-k2.5"
+    NVIDIA_BASE_URL: str
+    NVIDIA_MODEL: str
 
     TOP_K: int = 5
 

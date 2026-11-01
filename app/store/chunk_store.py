@@ -14,12 +14,12 @@ class ChunkStore:
 
     def save(self, path: Path) -> None:
         data = {str(k): vars(v) for k, v in self._store.items()}
-        path.write_text(json.dumps(data, ensure_ascii=False))
+        path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
     @classmethod
     def load(cls, path: Path) -> "ChunkStore":
         instance = cls()
-        data = json.loads(path.read_text())
+        data = json.loads(path.read_text(encoding="utf-8"))
         for k, v in data.items():
             instance._store[int(k)] = Chunk(**v)
         return instance
