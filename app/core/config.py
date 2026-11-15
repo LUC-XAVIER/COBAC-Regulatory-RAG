@@ -14,6 +14,8 @@ class Settings(BaseSettings):
 
     EMBEDDING_DIM: int
     EMBEDDING_MODEL: str
+    MAX_CHARS: int
+    OVERLAP_CHARS: int
 
     NVIDIA_API_KEY: str
     NVIDIA_BASE_URL: str
