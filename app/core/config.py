@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     NVIDIA_MODEL: str
 
     TOP_K: int = 5
+    MIN_SCORE: float = 0.78
 
 
 settings = Settings()
