@@ -5,6 +5,11 @@ from typing import NamedTuple
 from app.services.loader import PageText
 from app.core.config import settings
 
+from pathlib import Path
+
+LABEL_RE = re.compile(r"^(?:Article|ARTICLE|Art\.)\s+[^\s:.\-–—(]+(?:\s*(?:bis|ter|quater))?")
+PREAMBLE_HEADING = "Préambule et textes visés"
+
 
 # A real article heading: "Article 7", "Article 7 :", "Article 7 -", "Article 7 (nouveau)",
 # "Art. 7.", "ARTICLE PREMIER", "Article 7 bis -". The number must be followed by the end
@@ -18,6 +23,11 @@ ARTICLE_RE = re.compile(
 )
 PAGE_NUMBER_RE = re.compile(r"^(?:page\s*)?\d+(?:\s*(?:/|sur)\s*\d+)?$", re.IGNORECASE)
 
+PAGE_IN_LINE_RE = re.compile(
+    r"\b(?:page|p\.)\s*\d+(?:\s*(?:/|sur|of)\s*\d+)?|\b\d+\s*(?:/|sur)\s*\d+\b",
+    re.IGNORECASE,
+)
+
 
 @dataclass
 class Chunk:
@@ -26,12 +36,23 @@ class Chunk:
     page: int                    # first page of the chunk
     page_end: int | None = None  # last page, when the chunk spans several pages
     heading: str = ""            # e.g. "Article 7 : Capital minimum"
+    doc_title: str = ""
 
     @property
     def page_label(self) -> str:
         if self.page_end and self.page_end != self.page:
             return f"{self.page}-{self.page_end}"
         return str(self.page)
+
+    @property
+    def embedding_text(self) -> str:
+        m = LABEL_RE.match(self.heading)
+        label = m.group(0) if m else self.heading
+        header = " — ".join(part for part in (self.doc_title, label) if part)
+        return f"{header}\n{self.text}" if header else self.text
+
+def _title_from_source(source: str) -> str:
+    return Path(source).stem.replace("_", " ")
 
 
 class Line(NamedTuple):
@@ -76,7 +97,7 @@ def _clean_lines(pages: list[PageText]) -> list[Line]:
 
 
 def _normalize(line: str) -> str:
-    return re.sub(r"\d+", "#", line.lower())
+    return PAGE_IN_LINE_RE.sub("#", line.lower())
 
 
 def _split_into_units(lines: list[Line]) -> list[tuple[str, list[Line]]]:
@@ -92,6 +113,8 @@ def _split_into_units(lines: list[Line]) -> list[tuple[str, list[Line]]]:
             current.append(line)
     if current:
         units.append((heading, current))
+    if len(units) > 1 and units[0][0] == "":
+        units[0] = (PREAMBLE_HEADING, units[0][1])
     return units
 
 
@@ -113,6 +136,7 @@ def _pack(heading: str, lines: list[Line]) -> list[Chunk]:
                 page=current[0].page,
                 page_end=current[-1].page,
                 heading=heading,
+                doc_title=_title_from_source(current[0].source),
             )
         )
 
