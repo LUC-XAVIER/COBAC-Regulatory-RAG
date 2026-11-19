@@ -1,3 +1,6 @@
+import os
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+
 import logging
 from contextlib import asynccontextmanager
 
