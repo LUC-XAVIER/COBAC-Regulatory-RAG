@@ -24,5 +24,7 @@ class Settings(BaseSettings):
     TOP_K: int = 5
     MIN_SCORE: float = 0.78
 
+    DATABASE_URL: str | None = None
+
 
 settings = Settings()
